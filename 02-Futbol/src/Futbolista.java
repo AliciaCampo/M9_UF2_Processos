@@ -1,3 +1,4 @@
+package src;
 import java.util.Random;
 public class Futbolista extends Thread {
     public final static int NUM_JUGADORS= 11;
