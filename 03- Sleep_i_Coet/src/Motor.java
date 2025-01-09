@@ -1,9 +1,8 @@
 import java.util.Random;
-
 public class Motor extends Thread {
     private int potenciaActual = 0;
     private int potenciaObjetivo = 0;
-    private boolean enFuncionamiento = true; // Controla si el motor está activo
+    private boolean enFuncionamiento = true; // Controla si el hilo sigue activo
     private int id; // Identificador del motor para los logs
     public Motor(int id) {
         this.id = id;
@@ -17,28 +16,27 @@ public class Motor extends Thread {
     @Override
     public void run() {
         Random random = new Random();
-
         try {
             while (enFuncionamiento) {
                 synchronized (this) {
                     while (potenciaActual == potenciaObjetivo && enFuncionamiento) {
-                        wait(); // Esperamos a que el motor reciba instrucciones
+                        wait(); // Esperamos hasta que haya un cambio en la potencia objetivo
                     }
-
+                    if (potenciaActual == potenciaObjetivo) {
+                        System.out.printf("Motor %d: FerRes Objectiu: %d Actual: %d%n", id, potenciaObjetivo, potenciaActual);
+                    }
                     if (potenciaActual < potenciaObjetivo) {
                         potenciaActual++;
-                        System.out.printf("Motor %d: Incre. Objetivo: %d Actual: %d%n", id, potenciaObjetivo, potenciaActual);
+                        System.out.printf("Motor %d: Incre. Objectiu: %d Actual: %d%n", id, potenciaObjetivo, potenciaActual);
                     } else if (potenciaActual > potenciaObjetivo) {
                         potenciaActual--;
-                        System.out.printf("Motor %d: Decre. Objetivo: %d Actual: %d%n", id, potenciaObjetivo, potenciaActual);
+                        System.out.printf("Motor %d: Decre. Objectiu: %d Actual: %d%n", id, potenciaObjetivo, potenciaActual);
                     } else {
-                        System.out.printf("Motor %d: FerRes Objetivo: %d Actual: %d%n", id, potenciaObjetivo, potenciaActual);
-
-                        // Si la potencia actual y la objetivo son 0, apagamos el motor
-                        if (potenciaActual == 0 && potenciaObjetivo == 0) {
-                            enFuncionamiento = false;
-                            System.out.printf("Motor %d: Apagado.%n", id);
-                        }
+                        System.out.printf("Motor %d: FerRes Objectiu: %d Actual: %d%n", id, potenciaObjetivo, potenciaActual);
+                    }
+                    // Si la potencia es 0, apagamos el motor
+                    if (potenciaActual == 0 && potenciaObjetivo == 0) {
+                        enFuncionamiento = false; // Detenemos el motor
                     }
                 }
                 // Pausa aleatoria entre 1 y 2 segundos
@@ -49,4 +47,3 @@ public class Motor extends Thread {
         }
     }
 }
-
