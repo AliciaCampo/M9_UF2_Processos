@@ -6,11 +6,9 @@ public class Motor extends Thread {
     private boolean enFuncionamiento = true; // Controla si el hilo sigue activo
     private int id; // Identificador del motor para los logs
     private boolean objetivoEstablecido = false; // Bandera para verificar si ya se ha establecido un objetivo
-
     public Motor(int id) {
         this.id = id;
     }
-
     // Setter sincronizado para establecer la potencia objetivo
     public synchronized void setPotencia(int potenciaObjetivo) {
         this.potenciaObjetivo = potenciaObjetivo;
