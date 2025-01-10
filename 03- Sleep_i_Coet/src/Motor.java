@@ -36,10 +36,10 @@ public class Motor extends Thread {
                             System.out.printf("Motor %d: Incre. Objectiu: %d Actual: %d%n", id, potenciaObjetivo, potenciaActual);
                         }
                     } else if (potenciaActual > potenciaObjetivo) {
-                        potenciaActual--;
                         if (potenciaActual != potenciaObjetivo) {
                             System.out.printf("Motor %d: Decre. Objectiu: %d Actual: %d%n", id, potenciaObjetivo, potenciaActual);
                         }
+                        potenciaActual--;
                     }
                     // Si la potencia es 0 y no hay objetivo, apagamos el motor
                     if (potenciaActual == 0 && potenciaObjetivo == 0 && objetivoEstablecido) {
