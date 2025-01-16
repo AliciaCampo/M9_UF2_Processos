@@ -1,12 +1,11 @@
 import java.util.Random;
 public class DormAleatori extends Thread {
-    private  String name;
     private int interval_aleatori;
     private Random random = new Random();
     private long tiempo;
     public DormAleatori(String nombre) {
+        super(nombre);
         this.tiempo = System.currentTimeMillis();
-        this.name = nombre;
     }
     public static void main(String[] args) {
         DormAleatori dormir1 = new DormAleatori("Joan");
@@ -25,7 +24,7 @@ public class DormAleatori extends Thread {
         for (int i = 0; i < 10; i++) {
             interval_aleatori = random.nextInt(1000);
             long tiempoTotal = System.currentTimeMillis()-tiempo;
-            System.out.printf("%s(%d) a dormir %dms total %d%n", name, i, interval_aleatori, tiempoTotal);
+            System.out.printf("%s(%d) a dormir %dms total %d%n", getName(), i, interval_aleatori, tiempoTotal);
             try {
                 Thread.sleep(interval_aleatori);
             }catch(InterruptedException e){
