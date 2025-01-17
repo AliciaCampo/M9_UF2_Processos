@@ -32,17 +32,17 @@ public class Treballador extends Thread {
         cobrat -= impostos;
     }
     @Override
-    public void run (){
-        for(edat = 0; edat < edat_fin_treball;edat++) {
-            if(edat >= edat_inici_treball && edat <= edat_fin_treball){
-                cobra();
-                pagaImpostos();
-                try {
-                    Thread.sleep(100 + rnd.nextInt(101));
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
+    public void run() {
+        int totalMesos = (edat_fin_treball - edat_inici_treball )*12;
+        for (int mes = 0; mes < totalMesos; mes++) {
+            cobra();         // Cobra el sou mensual brut
+            pagaImpostos();  // Resta els impostos del mes
+            edat = edat_inici_treball + (mes / 12) +1;
+           try {
+                Thread.sleep(100 + rnd.nextInt(101)); // Simula el pas del temps
+            } catch (InterruptedException e) {
+                e.printStackTrace();
             }
         }
-    }  
+    } 
 }
