@@ -2,7 +2,7 @@ public class Compte {
     private float saldo;
     private static Compte instance;
 
-    public float getSaldo() {
+    public synchronized  float getSaldo() {
         return saldo;
     }
 
@@ -10,15 +10,16 @@ public class Compte {
         this.saldo = saldo;
     }
     private Compte(){}
-    public static Compte getInstance(){
+    public synchronized static Compte getInstance(){
         if(instance == null){
             instance = new Compte();
         }
         return instance;
     }
-    public void ingresar(float valor){
+    public synchronized void ingresar(float valor){
         this.saldo += valor;
-    }public void retirar(float valor){
+    }
+    public  synchronized void retirar(float valor){
         this.saldo -= valor;
     }
 }
