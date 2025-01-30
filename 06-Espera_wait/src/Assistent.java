@@ -1,5 +1,4 @@
 import java.util.Random;
-
 public class Assistent extends Thread {
     private Esdeveniment esdeveniment ;
     public Assistent(String nom,Esdeveniment esdeveniment){
@@ -13,7 +12,6 @@ public class Assistent extends Thread {
             try {
                 // Espera aleatoria entre 0 y 1 segundo
                 Thread.sleep(random.nextInt(1001));  // 0-1000 ms (0-1 segundo)
-                
                 synchronized (esdeveniment) {
                     // Generar un número aleatorio entre 0 y 1
                     if (random.nextDouble() < 0.5) {
