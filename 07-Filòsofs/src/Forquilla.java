@@ -1,11 +1,11 @@
 public class Forquilla {
     private int numero;
     private boolean enUs;
-
     public Forquilla( int numero) {
         this.enUs = false;
         this.numero = numero;
     }
+    public Forquilla(){}
     public int getNumero() {
         return numero;
     }

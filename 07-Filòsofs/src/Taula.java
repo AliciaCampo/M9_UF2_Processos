@@ -16,8 +16,9 @@ public class Taula {
             System.out.printf("Comensal: %s esq:%d dret:%d%n", 
             comensals[i].getName(), 
             forquilles[i].getNumero(), 
-            forquilles[(i + 1) % comensals.length].getNumero());            //pasar a printf
+            forquilles[(i + 1) % comensals.length].getNumero());           
         }
+        System.out.println("------------------------------");
     }
     public void cridaTaula(){
         for (Filosof fil : comensals){
