@@ -7,7 +7,7 @@ public class Forquilla {
         this.propietari = LLIURE;
     }
     public Forquilla(){}
-    public void agafar(int id)throws InterruptedException{
+    public synchronized void agafar(int id)throws InterruptedException{
         while(propietari != LLIURE){
             wait();
         }
@@ -27,7 +27,7 @@ public class Forquilla {
         this.numero = numero;
     }
     
-    public void deixar(){
+    public synchronized void deixar(){
         propietari = LLIURE;
         notifyAll();
     }
