@@ -1,5 +1,5 @@
 public class Forquilla {
-    private int propietari;
+    private int propietari=-1;
     private int numero;
     public static final int LLIURE = -1; 
     public Forquilla(int numero) {
@@ -7,11 +7,12 @@ public class Forquilla {
         this.propietari = LLIURE;
     }
     public Forquilla(){}
-    public synchronized void agafar(int id)throws InterruptedException{
-        while(propietari != LLIURE){
+    public  boolean agafar(int id)throws InterruptedException{
+        while(this.propietari != LLIURE){
             wait();
         }
-        propietari = id;
+        this.propietari = id;
+        return true;
     }
     public int getPropietari() {
         return propietari;

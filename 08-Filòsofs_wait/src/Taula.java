@@ -15,8 +15,8 @@ public class Taula {
         for ( int i =0 ; i< comensals.length ; i++){
             System.out.printf("Comensal: %s esq:%d dret:%d%n", 
             comensals[i].getName(), 
-            forquilles[i].getPropietari(), 
-            forquilles[(i + 1) % comensals.length].getPropietari());           
+            forquilles[i].getNumero(), 
+            forquilles[(i + 1) % comensals.length].getNumero());           
         }
         System.out.println("------------------------------");
     }

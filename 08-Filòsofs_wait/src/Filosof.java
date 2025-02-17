@@ -10,21 +10,28 @@ public class Filosof extends Thread {
     public Filosof(String nom, Forquilla esquerra, Forquilla dreta) {
         super(nom);
         this.id = Integer.parseInt(nom.replace("fil", ""));
-        this.forquillaEsquerra = esquerra;
-        this.forquillaDreta = dreta;
+        // Alternar el orden en que los filòsofs agarran las forquillas
+        if (id % 2 == 0) {
+            this.forquillaEsquerra = esquerra;
+            this.forquillaDreta = dreta;
+        } else {
+            this.forquillaEsquerra = dreta;
+            this.forquillaDreta = esquerra;
+        }
     }
 
     private void pensar() throws InterruptedException {
-        System.out.printf("Filòsof %d està pensant.%n", id);
+        System.out.printf("Filòsof %d està pensant. Gana: %d%n", id, gana);
         Thread.sleep(1000 + random.nextInt(1000)); // Entre 1s i 2s
     }
 
     private void menjar() throws InterruptedException {
         while (true) {
             if (agafarForquilles()) {
-                System.out.printf("Filòsof %d està menjant.%n", id);
+                System.out.printf("Filòsof %d està menjant. Gana: %d%n", id, gana);
                 Thread.sleep(1000 + random.nextInt(1000)); // Entre 1s i 2s
                 deixarForquilles();
+                gana = 0;
                 return;
             } else {
                 gana++;
@@ -34,26 +41,58 @@ public class Filosof extends Thread {
         }
     }
 
-    private boolean agafarForquilles() {
+    private boolean agafarForquilles() throws InterruptedException {
         try {
-            agafaForquillaEsquerra();
-            agafaForquillaDreta();
-            return true;
-        } catch (InterruptedException e) {
+            boolean esquerra = agafaForquillaEsquerra();
+            boolean dreta = agafaForquillaDreta();
+            
+            if (esquerra && dreta) {
+                return true;  // Si tiene ambas forquilles, puede comer
+            } else {
+                if (esquerra) deixarForquillaEsquerra();  // Si solo agarró la izquierda, la suelta
+                if (dreta) deixarForquillaDreta();        // Si solo agarró la derecha, la suelta
+                return false;
+            }
+        } catch (Exception e) {
             return false;
         }
     }
-
-    private void agafaForquillaEsquerra() throws InterruptedException {
-        forquillaEsquerra.agafar(id);
-        System.out.printf("%s ha agafat la forquilla esquerra %d.%n", getName(), forquillaEsquerra.getNumero());
+    private boolean deixarForquillaEsquerra() {
+        if (forquillaEsquerra != null) { // Verifica si existe
+            forquillaEsquerra.deixar();
+            System.out.printf("%s ha deixat la forquilla esquerra %d.%n", getName(), forquillaEsquerra.getNumero());
+            return true;
+        }
+        return false; // No había forquilla para soltar
     }
-
-    private void agafaForquillaDreta() throws InterruptedException {
-        forquillaDreta.agafar(id);
-        System.out.printf("%s ha agafat la forquilla dreta %d.%n", getName(), forquillaDreta.getNumero());
+    
+    private boolean deixarForquillaDreta() {
+        if (forquillaDreta != null) { // Verifica si existe
+            forquillaDreta.deixar();
+            System.out.printf("%s ha deixat la forquilla dreta %d.%n", getName(), forquillaDreta.getNumero());
+            return true;
+        }
+        return false; // No había forquilla para soltar
     }
-
+    private boolean agafaForquillaEsquerra() {
+        try {
+            forquillaEsquerra.agafar(id);
+            System.out.printf("%s ha agafat la forquilla esquerra %d.%n", getName(), forquillaEsquerra.getNumero());
+            return true;  // Éxito al agarrar
+        } catch (InterruptedException e) {
+            return false; // Fallo al agarrar
+        }
+    }
+    
+    private boolean agafaForquillaDreta() {
+        try {
+            forquillaDreta.agafar(id);
+            System.out.printf("%s ha agafat la forquilla dreta %d.%n", getName(), forquillaDreta.getNumero());
+            return true;  // Éxito al agarrar
+        } catch (InterruptedException e) {
+            return false; // Fallo al agarrar
+        }
+    }
     private void deixarForquilles() {
         forquillaDreta.deixar();
         forquillaEsquerra.deixar();
