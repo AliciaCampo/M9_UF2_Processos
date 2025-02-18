@@ -25,38 +25,29 @@ public class Filosof extends Thread {
         Thread.sleep(1000 + random.nextInt(1000)); // Entre 1s i 2s
     }
 
-    private void menjar() throws InterruptedException {
-        while (true) {
-            if (agafarForquilles()) {
-                System.out.printf("Filòsof %d està menjant. Gana: %d%n", id, gana);
-                Thread.sleep(1000 + random.nextInt(1000)); // Entre 1s i 2s
-                deixarForquilles();
-                gana = 0;
-                return;
-            } else {
-                gana++;
-                System.out.printf("Filòsof %d no pot menjar, gana=%d. Esperant...%n", id, gana);
-                Thread.sleep(500 + random.nextInt(500)); // Espera entre 0.5s i 1s
-            }
-        }
-    }
+    public void menjar() throws InterruptedException {
 
-    private boolean agafarForquilles() throws InterruptedException {
-        try {
-            boolean esquerra = agafaForquillaEsquerra();
-            boolean dreta = agafaForquillaDreta();
-            
-            if (esquerra && dreta) {
-                return true;  // Si tiene ambas forquilles, puede comer
-            } else {
-                if (esquerra) deixarForquillaEsquerra();  // Si solo agarró la izquierda, la suelta
-                if (dreta) deixarForquillaDreta();        // Si solo agarró la derecha, la suelta
-                return false;
-            }
-        } catch (Exception e) {
-            return false;
+        agafarForquilles();
+
+        // come
+        System.out.printf("Filòsof: %s menja%n", getName());
+        Thread.sleep(random.nextInt(1000) + 1000);    
+        // deja las forquillas
+        deixarForquilles();
+        System.out.printf("Filòsof: %s ha acabat de menjar%n", getName());
+        gana = 0;
+    
+      }
+    
+    public void agafarForquilles() throws InterruptedException {
+        while (true) {
+          agafaForquillaEsquerra();
+          agafaForquillaDreta();
+          if (forquillaDreta.getPropietari() == this.id) break;
+          else Thread.sleep(random.nextInt(500) + 500);
         }
-    }
+    
+      }
     private boolean deixarForquillaEsquerra() {
         if (forquillaEsquerra != null) { // Verifica si existe
             forquillaEsquerra.deixar();
@@ -74,26 +65,35 @@ public class Filosof extends Thread {
         }
         return false; // No había forquilla para soltar
     }
-    private boolean agafaForquillaEsquerra() {
-        try {
-            forquillaEsquerra.agafar(id);
-            System.out.printf("%s ha agafat la forquilla esquerra %d.%n", getName(), forquillaEsquerra.getNumero());
-            return true;  // Éxito al agarrar
-        } catch (InterruptedException e) {
-            return false; // Fallo al agarrar
+    public void agafaForquillaEsquerra() throws InterruptedException {
+
+        while (forquillaEsquerra.getPropietari() != Forquilla.LLIURE) {
+          synchronized (this) { wait(); }
         }
-    }
     
-    private boolean agafaForquillaDreta() {
-        try {
-            forquillaDreta.agafar(id);
-            System.out.printf("%s ha agafat la forquilla dreta %d.%n", getName(), forquillaDreta.getNumero());
-            return true;  // Éxito al agarrar
-        } catch (InterruptedException e) {
-            return false; // Fallo al agarrar
+        forquillaEsquerra.setPropietari(this.id);
+        System.out.printf("Filòsof: %s agafa la forquilla esquerra %d%n", getName(), forquillaEsquerra.numero);
+      }
+    
+    
+      public void agafaForquillaDreta() throws InterruptedException {
+    
+        if (forquillaDreta.getPropietari() != Forquilla.LLIURE) {
+          forquillaEsquerra.deixar();
+          synchronized (this) {
+            notifyAll();
+          }
+          System.out.printf("Filòsof: %s deixa la esquerra(%d) (dreta ocupada)%n", getName(), forquillaEsquerra.numero);
+          gana++;
+          System.out.printf("Filòsof: %s gana=%d%n", getName(), gana);
         }
-    }
-    private void deixarForquilles() {
+        else {
+          forquillaDreta.setPropietari(this.id);
+          System.out.printf("Filòsof: %s agafa la forquilla dreta %d%n", getName(), forquillaDreta.numero);
+        }
+    
+      }
+    private synchronized  void deixarForquilles() {
         forquillaDreta.deixar();
         forquillaEsquerra.deixar();
         System.out.printf("%s ha deixat les forquilles.%n", getName());

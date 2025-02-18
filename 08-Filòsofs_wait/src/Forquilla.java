@@ -1,19 +1,20 @@
 public class Forquilla {
     private int propietari=-1;
-    private int numero;
+    public int numero;
     public static final int LLIURE = -1; 
+    public boolean enUs = false;
     public Forquilla(int numero) {
         this.numero = numero;
         this.propietari = LLIURE;
     }
     public Forquilla(){}
-    public  boolean agafar(int id)throws InterruptedException{
+    /*public synchronized  boolean agafar(int id)throws InterruptedException{
         while(this.propietari != LLIURE){
             wait();
         }
         this.propietari = id;
         return true;
-    }
+    }*/
     public int getPropietari() {
         return propietari;
     }
