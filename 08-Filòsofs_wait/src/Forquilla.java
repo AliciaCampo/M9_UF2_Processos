@@ -8,29 +8,18 @@ public class Forquilla {
         this.propietari = LLIURE;
     }
     public Forquilla(){}
-    /*public synchronized  boolean agafar(int id)throws InterruptedException{
+    public  void agafar(int id) throws InterruptedException{
         while(this.propietari != LLIURE){
             wait();
         }
         this.propietari = id;
-        return true;
-    }*/
-    public int getPropietari() {
-        return propietari;
     }
-    public void setPropietari(int propietari) {
-        this.propietari = propietari;
-    }
- 
-    public int getNumero() {
-        return numero;
-    }
-    public void setNumero(int numero) {
-        this.numero = numero;
-    }
-    
     public synchronized void deixar(){
         propietari = LLIURE;
         notifyAll();
     }
+    public int getPropietari() {return propietari;}
+    public void setPropietari(int propietari) {this.propietari = propietari;}
+    public int getNumero() {return numero;}
+    public void setNumero(int numero) {this.numero = numero;}
 }
