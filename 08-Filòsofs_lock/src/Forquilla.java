@@ -12,6 +12,8 @@ public class Forquilla {
         bloqueig.lock();
     }
     public  void deixar(){
-        bloqueig.unlock();
+        if (bloqueig.isHeldByCurrentThread()) {
+            bloqueig.unlock();
+        }
     }
 }
